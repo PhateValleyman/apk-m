@@ -1,11 +1,9 @@
 package main
-
 import (
 	"fmt"
 	"os"
 	"path/filepath"
 )
-
 func Sort() {
 	cfg := LoadConfig()
 	InitDB()

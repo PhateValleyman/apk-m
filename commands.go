@@ -1,10 +1,8 @@
 package main
-
 import (
 	"fmt"
 	"os"
 )
-
 func DatabaseExists() bool {
 	_, err := os.Stat(
 		DatabasePath(),

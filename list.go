@@ -1,10 +1,8 @@
 package main
-
 import (
 	"fmt"
 	"strings"
 )
-
 func List() {
 	InitDB()
 	rows, err := DB.Query(`
@@ -17,26 +15,10 @@ FROM apps
 ORDER BY package_id
 `)
 	if err != nil {
-		fmt.Println(
-			C(
-				"No database",
-				RED,
-			),
-		)
+		fmt.Println(C("No database", RED))
 		return
 	}
 	defer rows.Close()
-
-	fmt.Println()
-	fmt.Printf(
-		"%-50s | %-30s | %-15s | %-10s\n",
-		C("PATH", CYAN),
-		C("PACKAGE", CYAN),
-		C("VERSION", CYAN),
-		C("TYPE", CYAN),
-	)
-	fmt.Println(strings.Repeat("-", 115))
-
 	for rows.Next() {
 		var (
 			path    string
@@ -44,35 +26,11 @@ ORDER BY package_id
 			version string
 			mod     int
 		)
-		rows.Scan(
-			&path,
-			&pkg,
-			&version,
-			&mod,
-		)
-		typeName := "ORIGINAL"
-		color := GREEN
-		if mod == 1 {
-			typeName = "MOD"
-			color = RED
-		}
-
-		// Truncate path if it's too long
-		displayPath := path
-		if len(displayPath) > 50 {
-			displayPath = "..." + displayPath[len(displayPath)-47:]
-		}
-
-		fmt.Printf(
-			"%-50s | %-30s | %-15s | %-10s\n",
-			displayPath,
-			pkg,
-			version,
-			C(
-				typeName,
-				color,
-			),
-		)
+		rows.Scan(&path, &pkg, &version, &mod)
+		fmt.Println("================================")
+		fmt.Printf("      %s\n", path)
+		fmt.Println("--------------------------------")
+		fmt.Printf(" %s | %s\n", pkg, version)
+		fmt.Println("================================")
 	}
-	fmt.Println()
 }

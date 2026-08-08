@@ -1,13 +1,10 @@
 package main
-
 import (
 	"flag"
 	"fmt"
 	"os"
 )
-
 const VERSION = "2.0"
-
 func main() {
 	version := flag.Bool(
 		"v",

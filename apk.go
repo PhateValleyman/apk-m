@@ -1,5 +1,4 @@
 package main
-
 import (
 	"archive/zip"
 	"context"
@@ -13,16 +12,13 @@ import (
 	"strings"
 	"time"
 )
-
 const AAPT_TIMEOUT = 30 * time.Second
-
 type APKInfo struct {
 	Name    string
 	Package string
 	Version string
 	Code    string
 }
-
 func ScanAPK(path string) {
 	realAPK := path
 	ext := strings.ToLower(

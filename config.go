@@ -1,25 +1,21 @@
 package main
-
 import (
 	"encoding/json"
 	"os"
 	"path/filepath"
 )
-
 type Config struct {
 	StartPath        string `json:"start_path"`
 	ArchivePath      string `json:"archive_path"`
 	Workers          int    `json:"workers"`
 	RemoveDuplicates bool   `json:"remove_duplicates"`
 }
-
 var ConfigPath = filepath.Join(
 	os.Getenv("HOME"),
 	".config",
 	"apk-m",
 	"config.json",
 )
-
 func DefaultConfig() Config {
 	return Config{
 		StartPath:        "",

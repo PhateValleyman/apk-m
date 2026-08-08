@@ -1,9 +1,7 @@
 package main
-
 import (
 	"fmt"
 )
-
 func Progress(
 	current int,
 	total int,

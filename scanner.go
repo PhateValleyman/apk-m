@@ -1,5 +1,4 @@
 package main
-
 import (
 	"fmt"
 	"os"
@@ -7,7 +6,6 @@ import (
 	"strings"
 	"sync"
 )
-
 func Find(path string) {
 	cfg := LoadConfig()
 	if path == "" {
@@ -27,7 +25,6 @@ func Find(path string) {
 	InitDB()
 	ResetDB()
 	InitDB()
-
 	fmt.Println(
 		C(
 			"[SEARCH]",
@@ -35,7 +32,6 @@ func Find(path string) {
 		),
 		path,
 	)
-
 	var allFiles []string
 	filepath.WalkDir(
 		path,
@@ -62,27 +58,22 @@ func Find(path string) {
 			return nil
 		},
 	)
-
 	total := len(allFiles)
 	if total == 0 {
 		fmt.Println(C("No APK files found.", YELLOW))
 		return
 	}
-
 	SetTitle(
 		fmt.Sprintf("scanning %d files in %s", total, path),
 	)
-
 	files := make(chan string, 256)
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 	currentCount := 0
-
 	workers := cfg.Workers
 	if workers < 1 {
 		workers = 4
 	}
-
 	for i := 0; i < workers; i++ {
 		wg.Add(1)
 		go func() {
@@ -98,13 +89,11 @@ func Find(path string) {
 			}
 		}()
 	}
-
 	for _, file := range allFiles {
 		files <- file
 	}
 	close(files)
 	wg.Wait()
-
 	ClearTitle()
 	Bell()
 	fmt.Println()

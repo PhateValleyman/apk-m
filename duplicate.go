@@ -1,9 +1,7 @@
 package main
-
 import (
 	"fmt"
 )
-
 func RemoveDuplicates() {
 	rows, err := DB.Query(`
 SELECT

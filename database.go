@@ -1,5 +1,4 @@
 package main
-
 import (
 	"database/sql"
 	"fmt"
@@ -7,9 +6,7 @@ import (
 	"os"
 	"path/filepath"
 )
-
 var DB *sql.DB
-
 func DatabasePath() string {
 	return filepath.Join(
 		os.Getenv("HOME"),
