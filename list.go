@@ -28,9 +28,24 @@ func List() {
 		fmt.Println(line)
 		centerPrint(path, width)
 		fmt.Println(sep)
-		centerPrint(pkg+" | "+version, width)
+		halfWidth := width / 2
+		left := centerString(pkg, halfWidth)
+		right := centerString(version, width-halfWidth-1)
+		fmt.Printf("%s|%s\n", left, right)
 		fmt.Println(line)
 	}
+}
+func centerString(text string, width int) string {
+	if len(text) > width-2 {
+		text = text[:width-5] + "..."
+	}
+	padding := (width - len(text)) / 2
+	if padding < 0 {
+		padding = 0
+	}
+	leftPad := strings.Repeat(" ", padding)
+	rightPad := strings.Repeat(" ", width-len(text)-padding)
+	return leftPad + text + rightPad
 }
 func centerPrint(text string, width int) {
 	if len(text) > width-4 {
