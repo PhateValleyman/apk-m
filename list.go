@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func List() {
@@ -25,13 +26,17 @@ ORDER BY package_id
 		return
 	}
 	defer rows.Close()
+
 	fmt.Println()
-	fmt.Println(
-		C(
-			"PATH | PACKAGE | VERSION | TYPE",
-			CYAN,
-		),
+	fmt.Printf(
+		"%-50s | %-30s | %-15s | %-10s\n",
+		C("PATH", CYAN),
+		C("PACKAGE", CYAN),
+		C("VERSION", CYAN),
+		C("TYPE", CYAN),
 	)
+	fmt.Println(strings.Repeat("-", 115))
+
 	for rows.Next() {
 		var (
 			path    string
@@ -51,17 +56,23 @@ ORDER BY package_id
 			typeName = "MOD"
 			color = RED
 		}
-		fmt.Println(
-			path,
-			"|",
+
+		// Truncate path if it's too long
+		displayPath := path
+		if len(displayPath) > 50 {
+			displayPath = "..." + displayPath[len(displayPath)-47:]
+		}
+
+		fmt.Printf(
+			"%-50s | %-30s | %-15s | %-10s\n",
+			displayPath,
 			pkg,
-			"|",
 			version,
-			"|",
 			C(
 				typeName,
 				color,
 			),
 		)
 	}
+	fmt.Println()
 }

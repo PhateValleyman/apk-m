@@ -59,6 +59,26 @@ func main() {
 		false,
 		"sort",
 	)
+	duplicate := flag.Bool(
+		"d",
+		false,
+		"show duplicates",
+	)
+	duplicateLong := flag.Bool(
+		"duplicates",
+		false,
+		"show duplicates",
+	)
+	clean := flag.Bool(
+		"c",
+		false,
+		"clean database",
+	)
+	cleanLong := flag.Bool(
+		"clean",
+		false,
+		"clean database",
+	)
 	flag.Parse()
 	if *version || *versionLong {
 		fmt.Println(
@@ -87,6 +107,14 @@ func main() {
 	}
 	if *sort || *sortLong {
 		SortCommand()
+		return
+	}
+	if *duplicate || *duplicateLong {
+		DuplicateCommand()
+		return
+	}
+	if *clean || *cleanLong {
+		CleanCommand()
 		return
 	}
 	if len(os.Args) == 1 {
@@ -146,6 +174,20 @@ func ShowHelp() {
 	)
 	fmt.Println()
 	fmt.Println(
+		"  apk-m -d | --duplicates",
+	)
+	fmt.Println(
+		"      Show duplicate applications",
+	)
+	fmt.Println()
+	fmt.Println(
+		"  apk-m -c | --clean",
+	)
+	fmt.Println(
+		"      Clean database",
+	)
+	fmt.Println()
+	fmt.Println(
 		C(
 			"Examples:",
 			GREEN,
@@ -160,6 +202,9 @@ func ShowHelp() {
 	)
 	fmt.Println(
 		"  apk-m -s",
+	)
+	fmt.Println(
+		"  apk-m -d",
 	)
 	fmt.Println()
 }

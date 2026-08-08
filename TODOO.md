@@ -1,3 +1,4 @@
-- better grid output (single boxes 
-
-
+- better grid output (single boxes [DONE]
+- added progress bar to scanning [DONE]
+- added duplicates check command [DONE]
+- added clean database command [DONE]

@@ -53,3 +53,19 @@ func SortCommand() {
 	}
 	Sort()
 }
+func DuplicateCommand() {
+	if !DatabaseExists() {
+		fmt.Println(
+			C(
+				"No database found. Run find first.",
+				RED,
+			),
+		)
+		return
+	}
+	InitDB()
+	RemoveDuplicates()
+}
+func CleanCommand() {
+	ResetDB()
+}

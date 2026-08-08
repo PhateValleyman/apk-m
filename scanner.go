@@ -27,9 +27,7 @@ func Find(path string) {
 	InitDB()
 	ResetDB()
 	InitDB()
-	SetTitle(
-		"searching " + path,
-	)
+
 	fmt.Println(
 		C(
 			"[SEARCH]",
@@ -37,34 +35,16 @@ func Find(path string) {
 		),
 		path,
 	)
-	files := make(chan string, 256)
-	var wg sync.WaitGroup
-	workers := cfg.Workers
-	if workers < 1 {
-		workers = 4
-	}
-	for i := 0; i < workers; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			for file := range files {
-				ScanAPK(
-					file,
-				)
-			}
-		}()
-	}
-	err := filepath.WalkDir(
+
+	var allFiles []string
+	filepath.WalkDir(
 		path,
 		func(
 			current string,
 			entry os.DirEntry,
 			err error,
 		) error {
-			if err != nil {
-				return nil
-			}
-			if entry.IsDir() {
+			if err != nil || entry.IsDir() {
 				return nil
 			}
 			ext := strings.ToLower(
@@ -77,16 +57,54 @@ func Find(path string) {
 				".apks",
 				".xapk",
 				".apkm":
-				files <- current
+				allFiles = append(allFiles, current)
 			}
 			return nil
 		},
 	)
-	if err != nil {
-		fmt.Println(err)
+
+	total := len(allFiles)
+	if total == 0 {
+		fmt.Println(C("No APK files found.", YELLOW))
+		return
+	}
+
+	SetTitle(
+		fmt.Sprintf("scanning %d files in %s", total, path),
+	)
+
+	files := make(chan string, 256)
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+	currentCount := 0
+
+	workers := cfg.Workers
+	if workers < 1 {
+		workers = 4
+	}
+
+	for i := 0; i < workers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for file := range files {
+				ScanAPK(
+					file,
+				)
+				mu.Lock()
+				currentCount++
+				Progress(currentCount, total, "Scanning")
+				mu.Unlock()
+			}
+		}()
+	}
+
+	for _, file := range allFiles {
+		files <- file
 	}
 	close(files)
 	wg.Wait()
+
 	ClearTitle()
 	Bell()
 	fmt.Println()
