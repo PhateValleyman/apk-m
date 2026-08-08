@@ -1,4 +1,4 @@
-module apk-m
+module github.com/PhateValleyman/apk-m
 
 go 1.19.3
 
