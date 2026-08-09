@@ -1,4 +1,5 @@
 package main
+
 import (
 	"archive/zip"
 	"context"
@@ -12,13 +13,16 @@ import (
 	"strings"
 	"time"
 )
+
 const AAPT_TIMEOUT = 5 * time.Second
+
 type APKInfo struct {
 	Name    string
 	Package string
 	Version string
 	Code    string
 }
+
 func ScanAPK(path string) {
 	realAPK := path
 	ext := strings.ToLower(filepath.Ext(path))
@@ -42,7 +46,7 @@ func ScanAPK(path string) {
 	info, ok := ReadAPKInfo(realAPK)
 	if !ok {
 		fmt.Println(C("[TIMEOUT/ERROR] ", RED), path)
-		SaveRecord(path, LoadConfig().StartPath, typ, "", "", "", "", SHA256(path), 0, "", "UNREADABLE", 0)
+		SaveRecord(path, CurrentConfig.StartPath, typ, "", "", "", "", SHA256(path), 0, "", "UNREADABLE", 0)
 		return
 	}
 	hash := SHA256(path)
@@ -52,7 +56,7 @@ func ScanAPK(path string) {
 		size = stat.Size()
 	}
 	signature, status, isMod := CheckSignature(realAPK)
-	SaveRecord(path, LoadConfig().StartPath, typ, info.Name, info.Package, info.Version, info.Code, hash, size, signature, status, isMod)
+	SaveRecord(path, CurrentConfig.StartPath, typ, info.Name, info.Package, info.Version, info.Code, hash, size, signature, status, isMod)
 	fmt.Println(C("[FOUND] ", GREEN), info.Package, info.Version)
 }
 func ExtractBaseAPK(path string) (string, bool) {

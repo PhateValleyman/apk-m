@@ -1,8 +1,10 @@
 package main
+
 import (
 	"fmt"
 	"strings"
 )
+
 func List() {
 	InitDB()
 	rows, err := DB.Query(`SELECT path, package_id, version_name, is_mod FROM apps ORDER BY package_id`)

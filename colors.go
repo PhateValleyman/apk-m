@@ -1,5 +1,8 @@
 package main
+
 const (
+	BOLD   = "\033[1m"
+	DIM    = "\033[2m"
 	RESET  = "\033[0m"
 	RED    = "\033[31m"
 	GREEN  = "\033[32m"
@@ -8,6 +11,7 @@ const (
 	CYAN   = "\033[36m"
 	WHITE  = "\033[37m"
 )
+
 func C(
 	text string,
 	color string,

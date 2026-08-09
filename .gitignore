@@ -1,4 +1,6 @@
-bin
-vendor
-*.sum
+apk-manager
+*.db
+*.log
 apk-m
+new.sh
+vendor

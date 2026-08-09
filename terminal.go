@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"os"
@@ -6,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 )
+
 func SetTitle(text string) {
 	fmt.Printf("\033]0;%s\007", text)
 }

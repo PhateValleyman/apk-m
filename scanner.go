@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"os"
@@ -6,6 +7,7 @@ import (
 	"strings"
 	"sync"
 )
+
 func Find(path string) {
 	cfg := LoadConfig()
 	if path == "" {

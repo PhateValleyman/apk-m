@@ -1,8 +1,10 @@
 package main
+
 import (
 	"os/exec"
 	"strings"
 )
+
 func CheckSignature(path string) (string, string, int) {
 	cmd := exec.Command(
 		"apksigner",

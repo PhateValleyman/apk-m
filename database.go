@@ -1,4 +1,5 @@
 package main
+
 import (
 	"database/sql"
 	"fmt"
@@ -6,7 +7,9 @@ import (
 	"os"
 	"path/filepath"
 )
+
 var DB *sql.DB
+
 func DatabasePath() string {
 	return filepath.Join(
 		os.Getenv("HOME"),
@@ -58,4 +61,14 @@ func ResetDB() {
 			YELLOW,
 		),
 	)
+}
+
+func CreateIndexes() {
+
+	DB.Exec("CREATE INDEX IF NOT EXISTS idx_package ON apps(package_id)")
+
+	DB.Exec("CREATE INDEX IF NOT EXISTS idx_hash ON apps(sha256)")
+
+	DB.Exec("CREATE INDEX IF NOT EXISTS idx_mod ON apps(is_mod)")
+
 }
