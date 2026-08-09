@@ -60,8 +60,10 @@ ORDER BY size DESC
 		)
 		size += fileSize
 		category := "ORIGINAL"
+		catColor := BGREEN
 		if isMod == 1 {
 			category = "MOD"
+			catColor = BRED
 			mods++
 		} else {
 			original++
@@ -81,62 +83,33 @@ ORDER BY size DESC
 			dir,
 			filepath.Base(path),
 		)
-		fmt.Println()
-		fmt.Println(
-			C(
-				"MOVE:",
-				GREEN,
-			),
-			path,
-		)
-		fmt.Println(
-			" -> ",
-			dst,
-		)
+		
+		fmt.Printf("\n%s %s\n", C("MOVE:", catColor+BOLD), C(filepath.Base(path), BWHITE))
+		fmt.Printf("  %s %s\n", C("From:", BYELLOW), C(path, DIM))
+		fmt.Printf("  %s   %s\n", C("To:", BYELLOW), C(dst, DIM))
+
 		err := os.Rename(
 			path,
 			dst,
 		)
 		if err != nil {
-			fmt.Println(
-				C(
-					err.Error(),
-					RED,
-				),
-			)
+			Error("Failed to move file: %v", err)
 		}
 		current++
 		Progress(
 			current,
 			total,
-			"Sorting",
+			C("Sorting", BCYAN),
 		)
 	}
 	ClearTitle()
 	Bell()
 	fmt.Println()
-	fmt.Println(
-		C(
-			"SORT FINISHED",
-			GREEN,
-		),
-	)
-	fmt.Println(
-		"Path:",
-		cfg.StartPath,
-	)
-	fmt.Println(
-		"Original:",
-		original,
-	)
-	fmt.Println(
-		"Mods:",
-		mods,
-	)
-	fmt.Printf(
-		"Size: %.2f GB\n",
-		float64(size)/1024/1024/1024,
-	)
+	Success("Sorting finished!")
+	fmt.Printf("%s %s\n", C("Base Path:", BYELLOW), C(cfg.StartPath, BBLUE))
+	fmt.Printf("%s %s\n", C("Original: ", BYELLOW), C(fmt.Sprintf("%d", original), BGREEN))
+	fmt.Printf("%s %s\n", C("Mods:     ", BYELLOW), C(fmt.Sprintf("%d", mods), BRED))
+	fmt.Printf("%s %s\n", C("Total Size:", BYELLOW), C(fmt.Sprintf("%.2f GB", float64(size)/1024/1024/1024), BCYAN))
 	fmt.Println()
 	RemoveDuplicates()
 }

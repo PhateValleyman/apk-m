@@ -14,25 +14,28 @@ GROUP BY sha256
 HAVING COUNT(*) > 1
 `)
 	if err != nil {
+		Error("Failed to check for duplicates: %v", err)
 		return
 	}
 	defer rows.Close()
+	
+	count := 0
 	for rows.Next() {
+		count++
 		var (
 			hash  string
-			count int
+			num   int
 		)
 		rows.Scan(
 			&hash,
-			&count,
+			&num,
 		)
-		fmt.Println(
-			C(
-				"DUPLICATE:",
-				YELLOW,
-			),
-			hash,
-			count,
-		)
+		Warn("Duplicate found: %s (%s copies)", C(hash, BCYAN), C(fmt.Sprintf("%d", num), BYELLOW+BOLD))
+	}
+	
+	if count > 0 {
+		Info("Found %d unique hashes with duplicates.", count)
+	} else {
+		Success("No duplicate applications found.")
 	}
 }

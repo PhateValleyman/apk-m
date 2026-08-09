@@ -9,15 +9,19 @@ func List() {
 	InitDB()
 	rows, err := DB.Query(`SELECT path, package_id, version_name, is_mod FROM apps ORDER BY package_id`)
 	if err != nil {
-		fmt.Println(C("No database", RED))
+		Error("Failed to query database: %v", err)
 		return
 	}
 	defer rows.Close()
+
 	width := GetTerminalWidth()
-	if width < 40 {
-		width = 40
+	if width < 60 {
+		width = 60
 	}
+
+	count := 0
 	for rows.Next() {
+		count++
 		var (
 			path    string
 			pkg     string
@@ -25,17 +29,19 @@ func List() {
 			mod     int
 		)
 		rows.Scan(&path, &pkg, &version, &mod)
-		line := strings.Repeat("=", width)
-		sep := strings.Repeat("-", width)
-		fmt.Println(line)
-		centerPrint(path, width)
-		fmt.Println(sep)
-		halfWidth := width / 2
-		left := centerString(pkg, halfWidth)
-		right := centerString(version, width-halfWidth-1)
-		fmt.Printf("%s|%s\n", left, right)
-		fmt.Println(line)
+
+		modTag := ""
+		if mod == 1 {
+			modTag = C(" [MOD]", BRED+BOLD)
+		}
+
+		fmt.Println(C(strings.Repeat("━", width), BMAGENTA))
+		fmt.Printf("%s %s%s\n", C("Package:", BYELLOW), C(pkg, BWHITE+BOLD), modTag)
+		fmt.Printf("%s %s\n", C("Version:", BYELLOW), C(version, BCYAN))
+		fmt.Printf("%s %s\n", C("Path:   ", BYELLOW), C(path, DIM))
 	}
+	fmt.Println(C(strings.Repeat("━", width), BMAGENTA))
+	Success("Total applications found: %d", count)
 }
 func centerString(text string, width int) string {
 	if len(text) > width-2 {

@@ -11,61 +11,53 @@ func DatabaseExists() bool {
 	)
 	return err == nil
 }
+
 func FindCommand(path string) {
+	Header("=== SEARCH & SCAN ===")
 	if DatabaseExists() {
-		fmt.Println(
-			C(
-				"Database already exists. Overwrite? [y/N]",
-				YELLOW,
-			),
-		)
+		Warn("Database already exists. Overwrite? [y/N]")
 		var answer string
 		fmt.Scanln(
 			&answer,
 		)
 		if answer != "y" && answer != "Y" {
+			Info("Operation cancelled by user.")
 			return
 		}
 	}
 	Find(path)
 }
+
 func ListCommand() {
+	Header("=== APPLICATION LIST ===")
 	if !DatabaseExists() {
-		fmt.Println(
-			C(
-				"No database found. Run find first.",
-				RED,
-			),
-		)
+		Error("No database found. Please run find first.")
 		return
 	}
 	List()
 }
+
 func SortCommand() {
+	Header("=== SORTING APPLICATIONS ===")
 	if !DatabaseExists() {
-		fmt.Println(
-			C(
-				"No database found. Run find first.",
-				RED,
-			),
-		)
+		Error("No database found. Please run find first.")
 		return
 	}
 	Sort()
 }
+
 func DuplicateCommand() {
+	Header("=== DUPLICATE CHECK ===")
 	if !DatabaseExists() {
-		fmt.Println(
-			C(
-				"No database found. Run find first.",
-				RED,
-			),
-		)
+		Error("No database found. Please run find first.")
 		return
 	}
 	InitDB()
 	RemoveDuplicates()
 }
+
 func CleanCommand() {
+	Header("=== CLEANING DATABASE ===")
 	ResetDB()
+	Success("Database has been reset.")
 }

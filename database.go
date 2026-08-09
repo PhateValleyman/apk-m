@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	_ "modernc.org/sqlite"
 	"os"
 	"path/filepath"
@@ -54,12 +53,6 @@ CREATE TABLE IF NOT EXISTS apps (
 func ResetDB() {
 	os.Remove(
 		DatabasePath(),
-	)
-	fmt.Println(
-		C(
-			"Database removed",
-			YELLOW,
-		),
 	)
 }
 

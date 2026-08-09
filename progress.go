@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func Progress(
@@ -15,19 +16,13 @@ func Progress(
 		percent = current * 100 / total
 	}
 	done := width * percent / 100
-	bar := ""
-	for i := 0; i < width; i++ {
-		if i < done {
-			bar += "#"
-		} else {
-			bar += "-"
-		}
-	}
+	bar := C(strings.Repeat("━", done), BGREEN) + C(strings.Repeat("─", width-done), DIM)
+	
 	fmt.Printf(
-		"\r%s [%s] %d%%",
+		"\r%s [%s] %s",
 		text,
 		bar,
-		percent,
+		C(fmt.Sprintf("%3d%%", percent), BYELLOW+BOLD),
 	)
 	if current >= total {
 		fmt.Println()

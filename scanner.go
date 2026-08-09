@@ -11,29 +11,18 @@ import (
 func Find(path string) {
 	cfg := LoadConfig()
 	if path == "" {
-		fmt.Print(
-			"Search path: ",
-		)
-		fmt.Scanln(
-			&path,
-		)
+		fmt.Print(C("Search path: ", BYELLOW))
+		fmt.Scanln(&path)
 	}
 	cfg.StartPath = path
-	cfg.ArchivePath = filepath.Join(
-		path,
-		"SORTED-APPS",
-	)
+	cfg.ArchivePath = filepath.Join(path, "SORTED-APPS")
 	SaveConfig(cfg)
 	InitDB()
 	ResetDB()
 	InitDB()
-	fmt.Println(
-		C(
-			"[SEARCH]",
-			CYAN,
-		),
-		path,
-	)
+
+	Info("Scanning directory: %s", C(path, BBLUE+UNDER))
+
 	var allFiles []string
 	filepath.WalkDir(
 		path,
@@ -62,9 +51,12 @@ func Find(path string) {
 	)
 	total := len(allFiles)
 	if total == 0 {
-		fmt.Println(C("No APK files found.", YELLOW))
+		Warn("No APK files found in the specified path.")
 		return
 	}
+
+	Info("Found %s files to scan.", C(fmt.Sprintf("%d", total), BYELLOW+BOLD))
+
 	SetTitle(
 		fmt.Sprintf("scanning %d files in %s", total, path),
 	)
@@ -86,7 +78,7 @@ func Find(path string) {
 				)
 				mu.Lock()
 				currentCount++
-				Progress(currentCount, total, "Scanning")
+				Progress(currentCount, total, C("Scanning", BCYAN))
 				mu.Unlock()
 			}
 		}()
@@ -99,12 +91,7 @@ func Find(path string) {
 	ClearTitle()
 	Bell()
 	fmt.Println()
-	fmt.Println(
-		C(
-			"Search finished",
-			GREEN,
-		),
-	)
+	Success("Search finished. Scanned %d files.", total)
 }
 func SaveRecord(
 	path string,

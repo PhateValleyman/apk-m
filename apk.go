@@ -29,7 +29,7 @@ func ScanAPK(path string) {
 	if ext != ".apk" {
 		tmp, ok := ExtractBaseAPK(path)
 		if !ok {
-			fmt.Println(C("Cannot extract "+path, RED))
+			// Silently fail or log to a file, avoid breaking progress bar
 			return
 		}
 		realAPK = tmp
@@ -45,7 +45,6 @@ func ScanAPK(path string) {
 	}
 	info, ok := ReadAPKInfo(realAPK)
 	if !ok {
-		fmt.Println(C("[TIMEOUT/ERROR] ", RED), path)
 		SaveRecord(path, CurrentConfig.StartPath, typ, "", "", "", "", SHA256(path), 0, "", "UNREADABLE", 0)
 		return
 	}
@@ -57,7 +56,6 @@ func ScanAPK(path string) {
 	}
 	signature, status, isMod := CheckSignature(realAPK)
 	SaveRecord(path, CurrentConfig.StartPath, typ, info.Name, info.Package, info.Version, info.Code, hash, size, signature, status, isMod)
-	fmt.Println(C("[FOUND] ", GREEN), info.Package, info.Version)
 }
 func ExtractBaseAPK(path string) (string, bool) {
 	reader, err := zip.OpenReader(path)
